@@ -31,18 +31,26 @@ def test_return_ultima_faixa(valor, expected_aliquota, expected_faixa):
     assert retorno["faixa"] == expected_faixa
 
 
-def test_cadastro_rendimentos(pessoa):
-    pessoa.cadastrar_rendimentos(1000, "Salario")
-    pessoa.cadastrar_rendimentos(2000, "Alugueis")
-    assert pessoa.rendimentos[0]["valor"] == 1000
-    assert pessoa.rendimentos[1]["valor"] == 2000
-    assert pessoa.soma_rendimentos_tributaveis == 3000
+@pytest.mark.parametrize(
+    ("valor", "descricao"),
+    [(1000, "Salario"), (0000.1, "Alugueis"), (999999999, "VENDA"), (20202.0, "aulas")],
+)
+def test_cadastro_rendimentos(pessoa, valor, descricao):
+    pessoa.cadastrar_rendimentos(valor, descricao)
+    assert pessoa.rendimentos[-1]["valor"] == valor
+    assert pessoa.rendimentos[-1]["descricao"] == descricao
 
 
-def test_cadastro_rendimento_exception(pessoa):
+@pytest.mark.parametrize(
+    ("valor", "descricao", "expected_exception"),
+    [
+        (-1000, "Salario", "ValorRendimentoInvalidoException"),
+        (1000, "", "DescricaoEmBrancoException"),
+        (None, "Salario", "ValorRendimentoInvalidoException"),
+        (1000, None, "DescricaoEmBrancoException"),
+    ],
+)
+def test_cadastro_rendimento_exception(pessoa, valor, descricao, expected_exception):
     with pytest.raises(Exception):
-        pessoa.cadastrar_rendimentos(-1000, "Salario")
-        assert Exception == "ValorRendimentoInvalidoException"
-    with pytest.raises(Exception):
-        pessoa.cadastrar_rendimentos(1000, "")
-        assert Exception == "DescricaoEmBrancoException"
+        pessoa.cadastrar_rendimentos(valor, descricao)
+        assert Exception == expected_exception
