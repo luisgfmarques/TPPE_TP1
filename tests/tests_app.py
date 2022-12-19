@@ -122,3 +122,13 @@ def test_total_deducoes(pessoa):
     pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
     pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
     assert pessoa.total_deducoes() == 3568.77
+
+def test_total_deducoes_dependentes_depois(pessoa):
+    pessoa.insere_deducao(1000, "funpresp")
+    pessoa.insere_deducao(1000, "Pensao alimenticia")
+    pessoa.insere_deducao(1000, "previdencia privada")
+    assert pessoa.total_deducoes() == 3000
+    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
+    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
+    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
+    assert pessoa.total_deducoes() == 3568.77
