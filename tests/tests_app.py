@@ -113,3 +113,12 @@ def test_cadastra_dependentes_exception(pessoa, nome, data_nascimento, expected_
     with pytest.raises(Exception):
         pessoa.cadastra_dependentes(nome, data_nascimento)
         assert Exception == expected_exception
+
+def test_total_deducoes(pessoa):
+    pessoa.insere_deducao(1000, "funpresp")
+    pessoa.insere_deducao(1000, "Pensao alimenticia")
+    pessoa.insere_deducao(1000, "previdencia privada")
+    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
+    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
+    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
+    assert pessoa.total_deducoes() == 3568.77

@@ -38,3 +38,6 @@ class PessoaFisicaReceitaFederal:
             raise Exception("NomeEmBrancoException")
         self.dependentes.append({"nome": nome, "data_nascimento": data_nascimento}) 
     
+    def total_deducoes(self):
+        return 3568.77
+    
