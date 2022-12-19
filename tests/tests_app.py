@@ -2,12 +2,10 @@ import pytest
 from ..functions import return_ultima_faixas
 from ..obj import PessoaFisicaReceitaFederal
 
-
 @pytest.fixture
 def pessoa():
     pessoa = PessoaFisicaReceitaFederal()
     return pessoa
-
 
 @pytest.mark.parametrize(
     "valor, expected_aliquota,expected_faixa",

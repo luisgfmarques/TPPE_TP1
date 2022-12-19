@@ -13,6 +13,10 @@ class PessoaFisicaReceitaFederal:
     def __init__(self, name: str = None, cpf: str = None):
         self.name = name
         self.cpf = cpf
+        self.rendimentos = []
+        self.soma_rendimentos_tributaveis = 0
+        self.deducao = []
+        self.dependentes = []
 
     def cadastrar_rendimentos(self, valor: float, descricao: str) -> None:
         if valor < 0 or valor is None:
@@ -33,3 +37,4 @@ class PessoaFisicaReceitaFederal:
         if nome is None or nome == "":
             raise Exception("NomeEmBrancoException")
         self.dependentes.append({"nome": nome, "data_nascimento": data_nascimento}) 
+    
