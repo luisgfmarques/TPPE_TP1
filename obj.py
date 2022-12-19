@@ -30,4 +30,6 @@ class PessoaFisicaReceitaFederal:
         self.deducao.append({"valor": valor, "descricao": descricao})
 
     def cadastra_dependentes(self, nome: str, data_nascimento: str):
+        if nome is None or nome == "":
+            raise Exception("NomeEmBrancoException")
         self.dependentes.append({"nome": nome, "data_nascimento": data_nascimento}) 

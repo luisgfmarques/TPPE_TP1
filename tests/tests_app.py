@@ -95,3 +95,15 @@ def test_cadastra_dependentes(pessoa, nome, data_nascimento):
     pessoa.cadastra_dependentes(nome, data_nascimento)
     assert pessoa.dependentes[-1]["nome"] == nome
     assert pessoa.dependentes[-1]["data_nascimento"] == data_nascimento
+
+@pytest.mark.parametrize(
+    ("nome", "data_nascimento", "expected_exception"),
+    [
+        ("", "01/01/2018", "NomeEmBrancoException"),
+        (None, "01/01/2018", "NomeEmBrancoException")
+    ],
+)
+def test_cadastra_dependentes_exception(pessoa, nome, data_nascimento, expected_exception):
+    with pytest.raises(Exception):
+        pessoa.cadastra_dependentes(nome, data_nascimento)
+        assert Exception == expected_exception
