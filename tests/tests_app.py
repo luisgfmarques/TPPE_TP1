@@ -68,3 +68,17 @@ def test_insere_deducao(pessoa):
     pessoa.insere_deducao(1000, "previdencia privada")
     assert pessoa.deducao[-1]["valor"] == 1000
     assert pessoa.deducao[-1]["descricao"] == "previdencia privada"
+
+@pytest.mark.parametrize(
+    ("valor", "descricao", "expected_exception"),
+    [
+        (-1000, "previdencia privada", "ValorDeducaoInvalidoException"),
+        (1000, "", "DescricaoEmBrancoException"),
+        (None, "previdencia privada", "ValorDeducaoInvalidoException"),
+        (1000, None, "DescricaoEmBrancoException"),
+    ],
+)
+def test_insere_deducao_exception(pessoa, valor, descricao, expected_exception):
+    with pytest.raises(Exception):
+        pessoa.insere_deducao(valor, descricao)
+        assert Exception == expected_exception
