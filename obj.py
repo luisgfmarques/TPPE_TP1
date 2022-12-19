@@ -39,5 +39,10 @@ class PessoaFisicaReceitaFederal:
         self.dependentes.append({"nome": nome, "data_nascimento": data_nascimento}) 
     
     def total_deducoes(self):
-        return 3000 + len(self.dependentes)*189.59
+        total_deducao = 0
+        for val in self.deducao:
+            total_deducao += val["valor"]
+        
+        total_deducao += len(self.dependentes)*189.59
+        return total_deducao
     

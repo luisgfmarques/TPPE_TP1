@@ -114,21 +114,24 @@ def test_cadastra_dependentes_exception(pessoa, nome, data_nascimento, expected_
         pessoa.cadastra_dependentes(nome, data_nascimento)
         assert Exception == expected_exception
 
-def test_total_deducoes(pessoa):
-    pessoa.insere_deducao(1000, "funpresp")
-    pessoa.insere_deducao(1000, "Pensao alimenticia")
-    pessoa.insere_deducao(1000, "previdencia privada")
-    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
-    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
-    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
-    assert pessoa.total_deducoes() == 3568.77
 
-def test_total_deducoes_dependentes_depois(pessoa):
-    pessoa.insere_deducao(1000, "funpresp")
-    pessoa.insere_deducao(1000, "Pensao alimenticia")
-    pessoa.insere_deducao(1000, "previdencia privada")
-    assert pessoa.total_deducoes() == 3000
-    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
-    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
-    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
-    assert pessoa.total_deducoes() == 3568.77
+@pytest.mark.parametrize(
+    ("deducoes", "dependentes"),
+    [
+        ([(1000, "funpresp"), (1000, "Pensao alimenticia"), (1000, "previdencia privada")],
+        [("Rafael Fernandes", "01/12/2007"), ("Bruno Dias", "01/08/2008"), ("Jonas Alves", "02/04/2009")]),
+        ([(100, "funpresp"), (2000, "Pensao alimenticia"), (5000, "previdencia privada")],
+        [("Rafael Dias", "01/12/2007"), ("Bruno Fernandes", "01/08/2008"), ("Jonas Lopes", "02/04/2009")])
+    ],
+)
+def test_total_deducoes(pessoa, deducoes, dependentes):
+    total = 0
+    for deducao in deducoes:
+        pessoa.insere_deducao(deducao[0], deducao[1])
+        total += deducao[0]
+        assert pessoa.total_deducoes() == float("%0.2f"%total)
+    
+    for dependente in dependentes:
+        pessoa.cadastra_dependentes(dependente[0], dependente[1])
+        total += 189.59
+        assert pessoa.total_deducoes() == float("%0.2f"%total)
