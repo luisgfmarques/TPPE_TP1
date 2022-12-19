@@ -37,3 +37,12 @@ def test_cadastro_rendimentos(pessoa):
     assert pessoa.rendimentos[0]["valor"] == 1000
     assert pessoa.rendimentos[1]["valor"] == 2000
     assert pessoa.soma_rendimentos_tributaveis == 3000
+
+
+def test_cadastro_rendimento_exception(pessoa):
+    with pytest.raises(Exception):
+        pessoa.cadastrar_rendimentos(-1000, "Salario")
+        assert Exception == "ValorRendimentoInvalidoException"
+    with pytest.raises(Exception):
+        pessoa.cadastrar_rendimentos(1000, "")
+        assert Exception == "DescricaoEmBrancoException"
