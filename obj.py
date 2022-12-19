@@ -30,4 +30,4 @@ class PessoaFisicaReceitaFederal:
         self.deducao.append({"valor": valor, "descricao": descricao})
 
     def cadastra_dependentes(self, nome: str, data_nascimento: str):
-        self.dependentes.append({"nome": "Rafael Fernandes", "data_nascimento": "01/12/2007"}) 
+        self.dependentes.append({"nome": nome, "data_nascimento": data_nascimento}) 

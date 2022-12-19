@@ -83,7 +83,12 @@ def test_insere_deducao_exception(pessoa, valor, descricao, expected_exception):
         pessoa.insere_deducao(valor, descricao)
         assert Exception == expected_exception
 
-def test_cadastra_dependente(pessoa):
+def test_cadastra_dependentes(pessoa):
     pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
     assert pessoa.dependentes[-1]["nome"] == "Rafael Fernandes"
     assert pessoa.dependentes[-1]["data_nascimento"] == "01/12/2007"
+
+def test_cadastra_outro_dependente(pessoa):
+    pessoa.cadastra_dependentes("Bruno Dias", "04/02/2004")
+    assert pessoa.dependentes[-1]["nome"] == "Bruno Dias"
+    assert pessoa.dependentes[-1]["data_nascimento"] == "04/02/2004"
