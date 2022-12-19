@@ -8,6 +8,7 @@ class PessoaFisicaReceitaFederal:
     rendimentos = []
     soma_rendimentos_tributaveis = 0
     deducao = []
+    dependentes = []
 
     def __init__(self, name: str = None, cpf: str = None):
         self.name = name
@@ -27,3 +28,6 @@ class PessoaFisicaReceitaFederal:
         if descricao is None or descricao == "":
             raise Exception("DescricaoEmBrancoException")
         self.deducao.append({"valor": valor, "descricao": descricao})
+
+    def cadastra_dependentes(self, nome: str, data_nascimento: str):
+        self.dependentes.append({"nome": "Rafael Fernandes", "data_nascimento": "01/12/2007"}) 
