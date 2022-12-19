@@ -64,10 +64,18 @@ def test_soma_rendimentos(pessoa):
     assert pessoa.soma_rendimentos_tributaveis == 4000
 
 
-def test_insere_deducao(pessoa):
-    pessoa.insere_deducao(1000, "previdencia privada")
-    assert pessoa.deducao[-1]["valor"] == 1000
-    assert pessoa.deducao[-1]["descricao"] == "previdencia privada"
+@pytest.mark.parametrize(
+    ("valor", "descricao"),
+    [
+        (1000, "previdencia privada"),
+        (1000, "pensao alimenticia"),
+        (1000, "funpresp")
+    ],
+)
+def test_insere_deducao(pessoa, valor, descricao):
+    pessoa.insere_deducao(valor, descricao)
+    assert pessoa.deducao[-1]["valor"] == valor
+    assert pessoa.deducao[-1]["descricao"] == descricao
 
 @pytest.mark.parametrize(
     ("valor", "descricao", "expected_exception"),
