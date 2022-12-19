@@ -1,3 +1,6 @@
+from .functions import return_ultima_faixas
+
+
 class PessoaFisicaReceitaFederal:
 
     name = None
@@ -13,7 +16,3 @@ class PessoaFisicaReceitaFederal:
             raise Exception("DescricaoEmBrancoException")
         self.rendimentos.append({"valor": valor, "descricao": descricao})
         self.soma_rendimentos_tributaveis += valor
-
-
-def printtest():
-    return "test"

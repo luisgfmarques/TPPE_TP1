@@ -54,3 +54,16 @@ def test_cadastro_rendimento_exception(pessoa, valor, descricao, expected_except
     with pytest.raises(Exception):
         pessoa.cadastrar_rendimentos(valor, descricao)
         assert Exception == expected_exception
+
+
+def test_soma_rendimentos(pessoa):
+    pessoa.cadastrar_rendimentos(1000, "Salario")
+    pessoa.cadastrar_rendimentos(1000, "Salario")
+    pessoa.cadastrar_rendimentos(1000, "Salario")
+    pessoa.cadastrar_rendimentos(1000, "Salario")
+    assert pessoa.soma_rendimentos_tributaveis == 4000
+
+
+def test_insere_deducao(pessoa):
+    pessoa.inserir_deducao(1000, "previdencia privada")
+    assert pessoa.deducao == 1000
