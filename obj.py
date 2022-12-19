@@ -7,12 +7,23 @@ class PessoaFisicaReceitaFederal:
     cpf = None
     rendimentos = []
     soma_rendimentos_tributaveis = 0
-    deducao = None
+    deducao = []
 
-    def cadastrar_rendimentos(self, valor: float, descricao: str):
+    def __init__(self, name: str = None, cpf: str = None):
+        self.name = name
+        self.cpf = cpf
+
+    def cadastrar_rendimentos(self, valor: float, descricao: str) -> None:
         if valor < 0 or valor is None:
             raise Exception("ValorRendimentoInvalidoException")
         if descricao is None or descricao == "":
             raise Exception("DescricaoEmBrancoException")
         self.rendimentos.append({"valor": valor, "descricao": descricao})
         self.soma_rendimentos_tributaveis += valor
+
+    def insere_deducao(self, valor: float, descricao: str) -> None:
+        if valor < 0 or valor is None:
+            raise Exception("ValorDeducaoInvalidoException")
+        if descricao is None or descricao == "":
+            raise Exception("DescricaoEmBrancoException")
+        self.deducao.append({"valor": valor, "descricao": descricao})

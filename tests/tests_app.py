@@ -65,5 +65,6 @@ def test_soma_rendimentos(pessoa):
 
 
 def test_insere_deducao(pessoa):
-    pessoa.inserir_deducao(1000, "previdencia privada")
-    assert pessoa.deducao == 1000
+    pessoa.insere_deducao(1000, "previdencia privada")
+    assert pessoa.deducao[-1]["valor"] == 1000
+    assert pessoa.deducao[-1]["descricao"] == "previdencia privada"
