@@ -1,5 +1,12 @@
 import pytest
 from ..functions import return_ultima_faixas
+from ..obj import PessoaFisicaReceitaFederal
+
+
+@pytest.fixture
+def pessoa():
+    pessoa = PessoaFisicaReceitaFederal()
+    return pessoa
 
 
 @pytest.mark.parametrize(
@@ -22,3 +29,11 @@ def test_return_ultima_faixa(valor, expected_aliquota, expected_faixa):
     retorno = return_ultima_faixas(valor)
     assert retorno["aliquota"] == expected_aliquota
     assert retorno["faixa"] == expected_faixa
+
+
+def test_cadastro_rendimentos(pessoa):
+    pessoa.cadastrar_rendimentos(1000, "Salario")
+    pessoa.cadastrar_rendimentos(2000, "Alugueis")
+    assert pessoa.rendimentos[0]["valor"] == 1000
+    assert pessoa.rendimentos[1]["valor"] == 2000
+    assert pessoa.soma_rendimentos_tributaveis == 3000
