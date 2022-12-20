@@ -144,3 +144,16 @@ def test_base_calculo(pessoa):
     pessoa.cadastra_dependentes("Rafael Dias", "01/12/2007")
     pessoa.cadastra_dependentes("Bruno Fernandes", "01/08/2008")
     assert float("%0.2f"%pessoa.base_de_calculo()) == 2620.82
+
+def test_base_calculo_dois_asserts(pessoa):
+    pessoa.cadastrar_rendimentos(3500, "Salario")
+    pessoa.cadastrar_rendimentos(1500, "Aluguel")
+    pessoa.insere_deducao(1000, "Pensao alimenticia")
+    pessoa.insere_deducao(1000, "Previdencia privada")
+    pessoa.cadastra_dependentes("Rafael Dias", "01/12/2007")
+    pessoa.cadastra_dependentes("Bruno Fernandes", "01/08/2008")
+    assert float("%0.2f"%pessoa.base_de_calculo()) == 2620.82
+    pessoa.cadastrar_rendimentos(1500, "Aluguel")
+    pessoa.insere_deducao(1000, "Pensao alimenticia")
+    pessoa.cadastra_dependentes("Bruno Fernandes", "01/08/2008")
+    assert float("%0.2f"%pessoa.base_de_calculo()) == 2931.23
