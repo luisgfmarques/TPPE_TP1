@@ -148,22 +148,21 @@ def test_total_deducoes(pessoa, deducoes, dependentes):
     ],
 )
 def test_base_de_calculo(pessoa, rendimentos, deducoes, dependentes):
-    base_de_calculo = 0
     for rendimento in rendimentos:
         pessoa.cadastrar_rendimentos(rendimento[0], rendimento[1])
-        base_de_calculo += rendimento[0]
+        base_de_calculo = pessoa.soma_rendimentos_tributaveis
         assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
     
     for deducao in deducoes:
         pessoa.insere_deducao(deducao[0], deducao[1])
-        base_de_calculo -= deducao[0]
+        base_de_calculo = pessoa.soma_rendimentos_tributaveis - pessoa.total_deducoes()
         if base_de_calculo < 0:
             base_de_calculo = 0
         assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
     
     for dependente in dependentes:
         pessoa.cadastra_dependentes(dependente[0], dependente[1])
-        base_de_calculo -= 189.59
+        base_de_calculo = pessoa.soma_rendimentos_tributaveis - pessoa.total_deducoes()
         if base_de_calculo < 0:
             base_de_calculo = 0
         assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
