@@ -47,7 +47,12 @@ class PessoaFisicaReceitaFederal:
         return total_deducao
 
     def base_de_calculo(self):
-        if len(self.dependentes) == 2:
-            return 2620.82
-        return 2931.23
-    
+        total_rendimentos = 0
+        for rendimento in self.rendimentos:
+            total_rendimentos += rendimento["valor"]
+        
+        base_calculo = total_rendimentos - self.total_deducoes()
+        if base_calculo < 0:
+            return  0
+
+        return base_calculo

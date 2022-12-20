@@ -136,24 +136,35 @@ def test_total_deducoes(pessoa, deducoes, dependentes):
         total += 189.59
         assert pessoa.total_deducoes() == float("%0.2f"%total)
 
-def test_base_calculo(pessoa):
-    pessoa.cadastrar_rendimentos(3500, "Salario")
-    pessoa.cadastrar_rendimentos(1500, "Aluguel")
-    pessoa.insere_deducao(1000, "Pensao alimenticia")
-    pessoa.insere_deducao(1000, "Previdencia privada")
-    pessoa.cadastra_dependentes("Rafael Dias", "01/12/2007")
-    pessoa.cadastra_dependentes("Bruno Fernandes", "01/08/2008")
-    assert float("%0.2f"%pessoa.base_de_calculo()) == 2620.82
+@pytest.mark.parametrize(
+    ("rendimentos", "deducoes", "dependentes"),
+    [
+        ([(3000, "Salario"), (1500, "aluguel"), (1500, "Juros")],
+        [(1000, "funpresp"), (1000, "Pensao alimenticia"), (1000, "previdencia privada")],
+        [("Rafael Fernandes", "01/12/2007"), ("Bruno Dias", "01/08/2008"), ("Jonas Alves", "02/04/2009")]),
+        ([(3500, "Salario"), (1200, "aluguel"), (500, "Juros")],
+        [(100, "funpresp"), (2000, "Pensao alimenticia"), (5000, "previdencia privada")],
+        [("Rafael Dias", "01/12/2007"), ("Bruno Fernandes", "01/08/2008"), ("Jonas Lopes", "02/04/2009")])
+    ],
+)
+def test_base_de_calculo(pessoa, rendimentos, deducoes, dependentes):
+    base_de_calculo = 0
+    for rendimento in rendimentos:
+        pessoa.cadastrar_rendimentos(rendimento[0], rendimento[1])
+        base_de_calculo += rendimento[0]
+        assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
+    
+    for deducao in deducoes:
+        pessoa.insere_deducao(deducao[0], deducao[1])
+        base_de_calculo -= deducao[0]
+        if base_de_calculo < 0:
+            base_de_calculo = 0
+        assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
+    
+    for dependente in dependentes:
+        pessoa.cadastra_dependentes(dependente[0], dependente[1])
+        base_de_calculo -= 189.59
+        if base_de_calculo < 0:
+            base_de_calculo = 0
+        assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
 
-def test_base_calculo_dois_asserts(pessoa):
-    pessoa.cadastrar_rendimentos(3500, "Salario")
-    pessoa.cadastrar_rendimentos(1500, "Aluguel")
-    pessoa.insere_deducao(1000, "Pensao alimenticia")
-    pessoa.insere_deducao(1000, "Previdencia privada")
-    pessoa.cadastra_dependentes("Rafael Dias", "01/12/2007")
-    pessoa.cadastra_dependentes("Bruno Fernandes", "01/08/2008")
-    assert float("%0.2f"%pessoa.base_de_calculo()) == 2620.82
-    pessoa.cadastrar_rendimentos(1500, "Aluguel")
-    pessoa.insere_deducao(1000, "Pensao alimenticia")
-    pessoa.cadastra_dependentes("Bruno Fernandes", "01/08/2008")
-    assert float("%0.2f"%pessoa.base_de_calculo()) == 2931.23
