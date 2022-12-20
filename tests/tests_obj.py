@@ -1,32 +1,11 @@
 import pytest
-from ..functions import return_ultima_faixas
 from ..obj import PessoaFisicaReceitaFederal
+
 
 @pytest.fixture
 def pessoa():
     pessoa = PessoaFisicaReceitaFederal()
     return pessoa
-
-@pytest.mark.parametrize(
-    "valor, expected_aliquota,expected_faixa",
-    [
-        (2000, 0.075, 2),
-        (50000, 0.275, 5),
-        (100000, 0.275, 5),
-        (1800, 0, 1),
-        (1903.98, 0, 1),
-        (1903.99, 0.075, 2),
-        (2826.65, 0.075, 2),
-        (2826.66, 0.15, 3),
-        (3751.05, 0.15, 3),
-        (3751.06, 0.225, 4),
-        (4664.68, 0.225, 4),
-    ],
-)
-def test_return_ultima_faixa(valor, expected_aliquota, expected_faixa):
-    retorno = return_ultima_faixas(valor)
-    assert retorno["aliquota"] == expected_aliquota
-    assert retorno["faixa"] == expected_faixa
 
 
 @pytest.mark.parametrize(
@@ -64,16 +43,13 @@ def test_soma_rendimentos(pessoa):
 
 @pytest.mark.parametrize(
     ("valor", "descricao"),
-    [
-        (1000, "previdencia privada"),
-        (1000, "pensao alimenticia"),
-        (1000, "funpresp")
-    ],
+    [(1000, "previdencia privada"), (1000, "pensao alimenticia"), (1000, "funpresp")],
 )
 def test_insere_deducao(pessoa, valor, descricao):
     pessoa.insere_deducao(valor, descricao)
     assert pessoa.deducao[-1]["valor"] == valor
     assert pessoa.deducao[-1]["descricao"] == descricao
+
 
 @pytest.mark.parametrize(
     ("valor", "descricao", "expected_exception"),
@@ -89,12 +65,13 @@ def test_insere_deducao_exception(pessoa, valor, descricao, expected_exception):
         pessoa.insere_deducao(valor, descricao)
         assert Exception == expected_exception
 
+
 @pytest.mark.parametrize(
     ("nome", "data_nascimento"),
     [
         ("Rafael Fernandes", "01/12/2007"),
         ("Bruno Dias", "01/08/2008"),
-        ("Jonas Alves", "02/04/2009")
+        ("Jonas Alves", "02/04/2009"),
     ],
 )
 def test_cadastra_dependentes(pessoa, nome, data_nascimento):
@@ -102,14 +79,17 @@ def test_cadastra_dependentes(pessoa, nome, data_nascimento):
     assert pessoa.dependentes[-1]["nome"] == nome
     assert pessoa.dependentes[-1]["data_nascimento"] == data_nascimento
 
+
 @pytest.mark.parametrize(
     ("nome", "data_nascimento", "expected_exception"),
     [
         ("", "01/01/2018", "NomeEmBrancoException"),
-        (None, "01/01/2018", "NomeEmBrancoException")
+        (None, "01/01/2018", "NomeEmBrancoException"),
     ],
 )
-def test_cadastra_dependentes_exception(pessoa, nome, data_nascimento, expected_exception):
+def test_cadastra_dependentes_exception(
+    pessoa, nome, data_nascimento, expected_exception
+):
     with pytest.raises(Exception):
         pessoa.cadastra_dependentes(nome, data_nascimento)
         assert Exception == expected_exception
@@ -118,10 +98,30 @@ def test_cadastra_dependentes_exception(pessoa, nome, data_nascimento, expected_
 @pytest.mark.parametrize(
     ("deducoes", "dependentes"),
     [
-        ([(1000, "funpresp"), (1000, "Pensao alimenticia"), (1000, "previdencia privada")],
-        [("Rafael Fernandes", "01/12/2007"), ("Bruno Dias", "01/08/2008"), ("Jonas Alves", "02/04/2009")]),
-        ([(100, "funpresp"), (2000, "Pensao alimenticia"), (5000, "previdencia privada")],
-        [("Rafael Dias", "01/12/2007"), ("Bruno Fernandes", "01/08/2008"), ("Jonas Lopes", "02/04/2009")])
+        (
+            [
+                (1000, "funpresp"),
+                (1000, "Pensao alimenticia"),
+                (1000, "previdencia privada"),
+            ],
+            [
+                ("Rafael Fernandes", "01/12/2007"),
+                ("Bruno Dias", "01/08/2008"),
+                ("Jonas Alves", "02/04/2009"),
+            ],
+        ),
+        (
+            [
+                (100, "funpresp"),
+                (2000, "Pensao alimenticia"),
+                (5000, "previdencia privada"),
+            ],
+            [
+                ("Rafael Dias", "01/12/2007"),
+                ("Bruno Fernandes", "01/08/2008"),
+                ("Jonas Lopes", "02/04/2009"),
+            ],
+        ),
     ],
 )
 def test_total_deducoes(pessoa, deducoes, dependentes):
@@ -129,41 +129,61 @@ def test_total_deducoes(pessoa, deducoes, dependentes):
     for deducao in deducoes:
         pessoa.insere_deducao(deducao[0], deducao[1])
         total += deducao[0]
-        assert pessoa.total_deducoes() == float("%0.2f"%total)
-    
+        assert pessoa.total_deducoes() == float("%0.2f" % total)
+
     for dependente in dependentes:
         pessoa.cadastra_dependentes(dependente[0], dependente[1])
         total += 189.59
-        assert pessoa.total_deducoes() == float("%0.2f"%total)
+        assert pessoa.total_deducoes() == float("%0.2f" % total)
+
 
 @pytest.mark.parametrize(
     ("rendimentos", "deducoes", "dependentes"),
     [
-        ([(3000, "Salario"), (1500, "aluguel"), (1500, "Juros")],
-        [(1000, "funpresp"), (1000, "Pensao alimenticia"), (1000, "previdencia privada")],
-        [("Rafael Fernandes", "01/12/2007"), ("Bruno Dias", "01/08/2008"), ("Jonas Alves", "02/04/2009")]),
-        ([(3500, "Salario"), (1200, "aluguel"), (500, "Juros")],
-        [(100, "funpresp"), (2000, "Pensao alimenticia"), (5000, "previdencia privada")],
-        [("Rafael Dias", "01/12/2007"), ("Bruno Fernandes", "01/08/2008"), ("Jonas Lopes", "02/04/2009")])
+        (
+            [(3000, "Salario"), (1500, "aluguel"), (1500, "Juros")],
+            [
+                (1000, "funpresp"),
+                (1000, "Pensao alimenticia"),
+                (1000, "previdencia privada"),
+            ],
+            [
+                ("Rafael Fernandes", "01/12/2007"),
+                ("Bruno Dias", "01/08/2008"),
+                ("Jonas Alves", "02/04/2009"),
+            ],
+        ),
+        (
+            [(3500, "Salario"), (1200, "aluguel"), (500, "Juros")],
+            [
+                (100, "funpresp"),
+                (2000, "Pensao alimenticia"),
+                (5000, "previdencia privada"),
+            ],
+            [
+                ("Rafael Dias", "01/12/2007"),
+                ("Bruno Fernandes", "01/08/2008"),
+                ("Jonas Lopes", "02/04/2009"),
+            ],
+        ),
     ],
 )
 def test_base_de_calculo(pessoa, rendimentos, deducoes, dependentes):
     for rendimento in rendimentos:
         pessoa.cadastrar_rendimentos(rendimento[0], rendimento[1])
         base_de_calculo = pessoa.soma_rendimentos_tributaveis
-        assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
-    
+        assert pessoa.base_de_calculo() == float("%0.2f" % base_de_calculo)
+
     for deducao in deducoes:
         pessoa.insere_deducao(deducao[0], deducao[1])
         base_de_calculo = pessoa.soma_rendimentos_tributaveis - pessoa.total_deducoes()
         if base_de_calculo < 0:
             base_de_calculo = 0
-        assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
-    
+        assert pessoa.base_de_calculo() == float("%0.2f" % base_de_calculo)
+
     for dependente in dependentes:
         pessoa.cadastra_dependentes(dependente[0], dependente[1])
         base_de_calculo = pessoa.soma_rendimentos_tributaveis - pessoa.total_deducoes()
         if base_de_calculo < 0:
             base_de_calculo = 0
-        assert pessoa.base_de_calculo() == float("%0.2f"%base_de_calculo)
-
+        assert pessoa.base_de_calculo() == float("%0.2f" % base_de_calculo)
