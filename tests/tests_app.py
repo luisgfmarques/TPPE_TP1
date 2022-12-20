@@ -135,3 +135,12 @@ def test_total_deducoes(pessoa, deducoes, dependentes):
         pessoa.cadastra_dependentes(dependente[0], dependente[1])
         total += 189.59
         assert pessoa.total_deducoes() == float("%0.2f"%total)
+
+def test_base_calculo(pessoa):
+    pessoa.cadastrar_rendimentos(3500, "Salario")
+    pessoa.cadastrar_rendimentos(1500, "Aluguel")
+    pessoa.insere_deducao(1000, "Pensao alimenticia")
+    pessoa.insere_deducao(1000, "Previdencia privada")
+    pessoa.cadastra_dependentes("Rafael Dias", "01/12/2007")
+    pessoa.cadastra_dependentes("Bruno Fernandes", "01/08/2008")
+    assert float("%0.2f"%pessoa.base_de_calculo()) == 2620.82
