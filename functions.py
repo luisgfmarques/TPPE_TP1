@@ -15,3 +15,7 @@ def return_ultima_faixas(valor):
                 "faixa": i + 1,
                 "aliquota": valores_limite[i]["aliquota"],
             }
+
+
+def calcula_imposto_efetivo(valortotal, valorimposto):
+    return round(valorimposto / valortotal * 100, 2)
