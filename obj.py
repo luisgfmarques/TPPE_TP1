@@ -1,4 +1,4 @@
-from functions import (
+from .functions import (
     return_ultima_faixas,
     calcula_imposto_efetivo,
     calcula_valor_importo,
