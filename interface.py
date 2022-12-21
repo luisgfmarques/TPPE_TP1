@@ -64,7 +64,7 @@ def makeform(root, fields):
          b1.pack()
       
    row = Frame(root)
-   lab = Label(row, width=22, text=field+": ", anchor='w')
+   lab = Label(row, width=22, text="Dependentes"+": ", anchor='w')
    ent = Entry(row)
    ent2 = Entry(row)
    ent2.insert(0,"Nome")
