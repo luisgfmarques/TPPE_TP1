@@ -82,6 +82,7 @@ def makeform(root, fields):
    return entries
 if __name__ == '__main__':
    root = Tk()
+   root.title("Calculadora IRPF")
    ents = makeform(root, fields)
    root.bind('<Return>', (lambda event, e = ents: fetch(e)))
    b1 = Button(root, text = 'Calcula',
