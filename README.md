@@ -6,7 +6,7 @@ Trabalho pratico 1 da disciplina de técnicas de programação para plataformas 
 Calculadora de IPRF com funções de cadastramento de rendimentos, deduções e dependentes.
 
 
-## ## Como executar
+## ## Como executar os testes
 - para executar a suite de testes e nescessario ter o python >= 3.6 instalado e o pytest.
 - o repositório contem um arquivo requirements.txt com as dependencias necessarias para executar o projeto.
 - para instalar as dependencias basta executar o comando `pip install -r requirements.txt` no terminal.
@@ -19,6 +19,10 @@ pip install -r requirements.txt
 ```
 - O pytest conta com algumas opções interessantes para visualização, como o parametro -v, -s e -k, para mais informações sobre essas opções basta executar o comando `pytest --help` no terminal. ou consultar a documentação do pytest em https://docs.pytest.org/en/latest/usage.html
 
+## ## Como executar a interface
+```
+python interface.py
+```
 ## Marcos Gabriel Tavares - 170041042
 
 ## Luis Marques - 180105604
