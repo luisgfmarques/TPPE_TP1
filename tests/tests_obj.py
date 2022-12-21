@@ -193,3 +193,32 @@ def test_base_de_calculo_exception(pessoa):
     with pytest.raises(Exception):
         pessoa.base_de_calculo()
         assert Exception == "BaseDeCalculoException"
+
+
+def test_calcula_imposto(pessoa):
+    pessoa.cadastrar_rendimentos(3000, "Salario")
+    pessoa.cadastrar_rendimentos(1500, "aluguel")
+    pessoa.cadastrar_rendimentos(1500, "Juros")
+    pessoa.insere_deducao(1000, "funpresp")
+    pessoa.insere_deducao(1000, "Pensao alimenticia")
+    pessoa.insere_deducao(1000, "previdencia privada")
+    pessoa.insere_deducao(1000, "gastos com saude")
+    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
+    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
+    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
+    pessoa.calcula_imposto()
+    assert pessoa.imposto == float("%0.2f" % 0.0)
+
+
+def calcular_aliquota_efeticva(pessoa):
+    pessoa.cadastrar_rendimentos(3000, "Salario")
+    pessoa.cadastrar_rendimentos(1500, "aluguel")
+    pessoa.cadastrar_rendimentos(1500, "Juros")
+    pessoa.insere_deducao(1000, "funpresp")
+    pessoa.insere_deducao(1000, "Pensao alimenticia")
+    pessoa.insere_deducao(1000, "previdencia privada")
+    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
+    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
+    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
+    pessoa.calcula_imposto()
+    assert pessoa.calcular_aliquota_efetiva() == float("%0.2f" % 0.0)
