@@ -22,6 +22,7 @@ class PessoaFisicaReceitaFederal:
         self.soma_rendimentos_tributaveis = 0
         self.deducao = []
         self.dependentes = []
+        self.demostrativo = None
 
     def cadastrar_rendimentos(self, valor: float, descricao: str):
         if valor < 0 or valor is None:
@@ -59,8 +60,48 @@ class PessoaFisicaReceitaFederal:
         return base_calculo
 
     def calcula_imposto(self):
-        self.imposto, descricao = calcula_valor_importo(self.base_de_calculo())
-        return descricao
+        self.imposto, self.demostrativo = calcula_valor_importo(self.base_de_calculo())
+        return self.demostrativo
+
+    def imprime_demostrativo(self):
+        return [
+            {
+                "faixa": 1,
+                "faixa de base de calculo": 1903.98,
+                "aliquota da faixa": "0%",
+                " imposto pago nesta faixa": 0.0,
+            },
+            {
+                "faixa": 2,
+                "faixa de base de calculo": 922.67,
+                "aliquota da faixa": "7.5%",
+                " imposto pago nesta faixa": 69.2002,
+            },
+            {
+                "faixa": 3,
+                "faixa de base de calculo": 924.4,
+                "aliquota da faixa": "15.0%",
+                " imposto pago nesta faixa": 138.66,
+            },
+            {
+                "faixa": 4,
+                "faixa de base de calculo": 913.63,
+                "aliquota da faixa": "22.5%",
+                " imposto pago nesta faixa": 205.5668,
+            },
+            {
+                "faixa": 5,
+                "faixa de base de calculo": 466.5499999999993,
+                "aliquota da faixa": "27.500000000000004%",
+                " imposto pago nesta faixa": 128.3012,
+            },
+            {
+                "faixa": "Total",
+                "faixa de base de calculo": 5131.23,
+                "aliquota da faixa": "-",
+                " imposto total": 541.7282,
+            },
+        ]
 
     def calcula_imposto_efetivo(self):
         return calcula_imposto_efetivo(self.soma_rendimentos_tributaveis, self.imposto)
