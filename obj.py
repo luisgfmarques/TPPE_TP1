@@ -1,4 +1,8 @@
-from functions import return_ultima_faixas, calcula_imposto_efetivo, calcula_valor_importo
+from functions import (
+    return_ultima_faixas,
+    calcula_imposto_efetivo,
+    calcula_valor_importo,
+)
 
 
 class PessoaFisicaReceitaFederal:
@@ -55,12 +59,14 @@ class PessoaFisicaReceitaFederal:
         return base_calculo
 
     def calcula_imposto(self):
-        self.imposto,descricao = calcula_valor_importo(self.base_de_calculo())
+        self.imposto, descricao = calcula_valor_importo(self.base_de_calculo())
         return descricao
-    
+
     def calcula_imposto_efetivo(self):
         return calcula_imposto_efetivo(self.soma_rendimentos_tributaveis, self.imposto)
-    
+
     def calcula_ultima_faixa(self):
         return return_ultima_faixas(self.base_de_calculo())
-    
+
+    def calcular_aliquota_efetiva(self):
+        return 0
