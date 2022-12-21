@@ -12,6 +12,14 @@ def calcula_imposto(entries):
    entries['Imposto'].insert(0, calculadora.imposto)
    entries['Aliquota Efetiva'].delete(0,END)
    entries['Aliquota Efetiva'].insert(0, calculadora.calcular_aliquota_efetiva()) 
+   for faixa in calculadora.demostrativo:
+      faixa_num = faixa["faixa"]
+      if isinstance(faixa_num, int):
+         entries[f"{faixa_num} Faixa"][1].delete(0,END)
+         entries[f"{faixa_num} Faixa"][1].insert(0, faixa["faixa de base de calculo"])
+         entries[f"{faixa_num} Faixa"][0].delete(0,END)
+         entries[f"{faixa_num} Faixa"][0].insert(0, faixa[" imposto pago nesta faixa"])
+         
 def add_rendimento(entries):
    valor = float(entries[1].get())
    descricao = str(entries[0].get())
@@ -69,7 +77,7 @@ def makeform(root, fields):
    b1 = Button(root, text = 'Adiciona',
    command=(lambda e = entries["Dependentes"] : add_dependente(e)))
    b1.pack()
-   for field in ('Base de Calculo', 'Imposto', 'Aliquota Efetiva'):
+   for field in ('Base de Calculo', 'Imposto', 'Aliquota Efetiva', '1 Faixa', '2 Faixa', '3 Faixa', '4 Faixa', '5 Faixa'):
       row = Frame(root)
       lab = Label(row, width=22, text=field+": ", anchor='w')
       ent = Entry(row)
@@ -78,6 +86,11 @@ def makeform(root, fields):
       lab.pack(side = LEFT)
       ent.pack(side = RIGHT, expand = YES, fill = X)
       entries[field] = ent
+      if field[0] in ('1','2','3','4','5'):
+         ent2 = Entry(row)
+         ent2.insert(0,"0")
+         ent2.pack(side = RIGHT, expand = YES, fill = X)
+         entries[field] = [ent, ent2]
    
    return entries
 if __name__ == '__main__':
