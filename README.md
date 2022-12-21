@@ -23,6 +23,14 @@ pip install -r requirements.txt
 ```
 python interface.py
 ```
-## Marcos Gabriel Tavares - 170041042
+Nao funciona em wsl. Pode ser necessario usar 
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+![Screenshot from 2022-12-21 17-59-19](https://user-images.githubusercontent.com/42779015/209001925-5b91c67c-5fa1-4f52-8a0b-44b345ec6762.png)
 
+
+## Marcos Gabriel Tavares - 170041042
 ## Luis Marques - 180105604
