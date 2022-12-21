@@ -195,19 +195,61 @@ def test_base_de_calculo_exception(pessoa):
         assert Exception == "BaseDeCalculoException"
 
 
-def test_calcula_imposto(pessoa):
-    pessoa.cadastrar_rendimentos(3000, "Salario")
-    pessoa.cadastrar_rendimentos(1500, "aluguel")
-    pessoa.cadastrar_rendimentos(1500, "Juros")
-    pessoa.insere_deducao(1000, "funpresp")
-    pessoa.insere_deducao(1000, "Pensao alimenticia")
-    pessoa.insere_deducao(1000, "previdencia privada")
-    pessoa.insere_deducao(1000, "gastos com saude")
-    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
-    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
-    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
+@pytest.mark.parametrize(
+    ("rendimentos", "deducoes", "dependentes", "imposto"),
+    [
+        (
+            [(3000, "Salario"), (1500, "aluguel"), (1500, "Juros")],
+            [
+                (1000, "funpresp"),
+                (1000, "Pensao alimenticia"),
+                (1000, "previdencia privada"),
+            ],
+            [
+                ("Rafael Fernandes", "01/12/2007"),
+                ("Bruno Dias", "01/08/2008"),
+                ("Jonas Alves", "02/04/2009"),
+            ],
+            39.54,
+        ),
+        (
+            [(3500, "Salario"), (1200, "aluguel"), (500, "Juros")],
+            [
+                (100, "funpresp"),
+                (2000, "Pensao alimenticia"),
+                (5000, "previdencia privada"),
+            ],
+            [
+                ("Rafael Dias", "01/12/2007"),
+                ("Bruno Fernandes", "01/08/2008"),
+                ("Jonas Lopes", "02/04/2009"),
+            ],
+            0.0,
+        ),
+        (
+            [(30000, "Salario"), (5000, "aluguel"), (3000, "dividendos")],
+            [
+                (2000, "Pensao alimenticia"),
+                (2000, "previdencia privada"),
+                (3000, "debitos com saude privada"),
+            ],
+            [
+                ("Rafael Bandeirantes", "29/12/2017"),
+                ("Jonas Lopes Batista", "02/04/2009"),
+            ],
+            7551.37,
+        ),
+    ],
+)
+def test_calcula_imposto(pessoa, rendimentos, deducoes, dependentes, imposto):
+    [pessoa.cadastrar_rendimentos(value[0], value[1]) for value in rendimentos]
+    [pessoa.insere_deducao(dedu, text) for dedu, text in deducoes]
+    [
+        pessoa.cadastra_dependentes(nome, data_nascimento)
+        for nome, data_nascimento in dependentes
+    ]
     pessoa.calcula_imposto()
-    assert pessoa.imposto == float("%0.2f" % 0.0)
+    assert pessoa.imposto == float("%0.2f" % imposto)
 
 
 def calcular_aliquota_efeticva(pessoa):
