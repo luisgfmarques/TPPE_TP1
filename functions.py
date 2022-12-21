@@ -34,43 +34,32 @@ def calcula_valor_importo(base_calculo: float):
     faixa = 0
     valores = []
     while valor_calculo > 0:
+        valores.append(
+            {
+                "faixa": faixa + 1,
+                "faixa de base de calculo": valores_limite[faixa]["valor"]
+                if valor_calculo > valores_limite[faixa]["valor"]
+                else valor_calculo,
+                "aliquota da faixa": str(valores_limite[faixa]["aliquota"] * 100) + "%",
+                " imposto pago nesta faixa": (
+                    (
+                        valores_limite[faixa]["valor"]
+                        if valor_calculo > valores_limite[faixa]["valor"]
+                        else valor_calculo
+                    )
+                    * valores_limite[faixa]["aliquota"]
+                ),
+            }
+        )
         if valor_calculo >= valores_limite[faixa]["valor"]:
             valor_imposto += (
                 valores_limite[faixa]["valor"] * valores_limite[faixa]["aliquota"]
-            )
-            valores.append(
-                {
-                    "faixa": faixa + 1,
-                    "faixa de base de calculo": valores_limite[faixa]["valor"]
-                    if valor_calculo > 0
-                    else valor_calculo,
-                    "aliquota da faixa": str(valores_limite[faixa]["aliquota"] * 100)
-                    + "%",
-                    " imposto pago nesta faixa": round(
-                        valores_limite[faixa]["valor"]
-                        * valores_limite[faixa]["aliquota"],
-                        4,
-                    ),
-                }
             )
             valor_calculo -= valores_limite[faixa]["valor"]
             valor_calculo = round(valor_calculo, 3)
         else:
             print("else")
             valor_imposto += valor_calculo * valores_limite[faixa]["aliquota"]
-            valores.append(
-                {
-                    "faixa": faixa + 1,
-                    "faixa de base de calculo": valores_limite[faixa]["valor"]
-                    if valor_calculo > valores_limite[faixa]["valor"]
-                    else valor_calculo,
-                    "aliquota da faixa": str(valores_limite[faixa]["aliquota"] * 100)
-                    + "%",
-                    " imposto pago nesta faixa": round(
-                        valor_calculo * valores_limite[faixa]["aliquota"], 4
-                    ),
-                }
-            )
             valor_calculo = 0
         faixa += 1
     valores.append(

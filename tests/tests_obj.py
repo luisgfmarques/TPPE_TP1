@@ -13,7 +13,7 @@ RETORNO_CASOS_DEMOSTRATIVO = [
             "faixa": 2,
             "faixa de base de calculo": 922.67,
             "aliquota da faixa": "7.5%",
-            " imposto pago nesta faixa": 69.2002,
+            " imposto pago nesta faixa": 69.20025,
         },
         {
             "faixa": 3,
@@ -25,19 +25,65 @@ RETORNO_CASOS_DEMOSTRATIVO = [
             "faixa": 4,
             "faixa de base de calculo": 913.63,
             "aliquota da faixa": "22.5%",
-            " imposto pago nesta faixa": 205.5668,
+            " imposto pago nesta faixa": 205.56675,
         },
         {
             "faixa": 5,
             "faixa de base de calculo": 466.5499999999993,
             "aliquota da faixa": "27.500000000000004%",
-            " imposto pago nesta faixa": 128.3012,
+            " imposto pago nesta faixa": 128.3012499999998,
         },
         {
             "faixa": "Total",
             "faixa de base de calculo": 5131.23,
             "aliquota da faixa": "-",
             " imposto total": 541.7282,
+        },
+    ],
+    [
+        {
+            "faixa": "Total",
+            "faixa de base de calculo": 0,
+            "aliquota da faixa": "-",
+            " imposto total": 0,
+        }
+    ],
+    [
+        {
+            "faixa": 1,
+            "faixa de base de calculo": 1903.98,
+            "aliquota da faixa": "0%",
+            " imposto pago nesta faixa": 0.0,
+        },
+        {
+            "faixa": 2,
+            "faixa de base de calculo": 922.67,
+            "aliquota da faixa": "7.5%",
+            " imposto pago nesta faixa": 69.20025,
+        },
+        {
+            "faixa": 3,
+            "faixa de base de calculo": 924.4,
+            "aliquota da faixa": "15.0%",
+            " imposto pago nesta faixa": 138.66,
+        },
+        {
+            "faixa": 4,
+            "faixa de base de calculo": 913.63,
+            "aliquota da faixa": "22.5%",
+            " imposto pago nesta faixa": 205.56675,
+        },
+        {
+            "faixa": 5,
+            "faixa de base de calculo": 25956.14,
+            "aliquota da faixa": "27.500000000000004%",
+            " imposto pago nesta faixa": 7137.9385,
+        },
+        {
+            "faixa": "Total",
+            "faixa de base de calculo": 30620.82,
+            "aliquota da faixa": "-",
+            " imposto total": 7551.3655,
         },
     ]
 ]
@@ -352,15 +398,66 @@ def test_calcular_aliquota_efeticva(
     assert pessoa.calcular_aliquota_efetiva() == float("%0.2f" % aliquota_efetiva)
 
 
-def test_imprime_demostrativo_apuracao_impostos(pessoa):
-    pessoa.cadastrar_rendimentos(3000, "Salario")
-    pessoa.cadastrar_rendimentos(1500, "aluguel")
-    pessoa.cadastrar_rendimentos(1500, "Juros")
-    pessoa.insere_deducao(100, "funpresp")
-    pessoa.insere_deducao(100, "Pensao alimenticia")
-    pessoa.insere_deducao(100, "previdencia privada")
-    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
-    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
-    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
+@pytest.mark.parametrize(
+    ("id", "rendimentos", "deducoes", "dependentes"),
+    [
+        (
+            0,
+            [(3000, "Salario"), (1500, "aluguel"), (1500, "Juros")],
+            [
+                (100, "funpresp"),
+                (100, "Pensao alimenticia"),
+                (100, "previdencia privada"),
+            ],
+            [
+                ("Rafael Fernandes", "01/12/2007"),
+                ("Bruno Dias", "01/08/2008"),
+                ("Jonas Alves", "02/04/2009"),
+            ],
+        ),
+        (
+            1,
+            [(3500, "Salario"), (1200, "aluguel"), (500, "Juros")],
+            [
+                (100, "funpresp"),
+                (2000, "Pensao alimenticia"),
+                (5000, "previdencia privada"),
+            ],
+            [
+                ("Rafael Dias", "01/12/2007"),
+                ("Bruno Fernandes", "01/08/2008"),
+                ("Jonas Lopes", "02/04/2009"),
+            ],
+        ),
+        (
+            2,
+            [(30000, "Salario"), (5000, "aluguel"), (3000, "dividendos")],
+            [
+                (2000, "Pensao alimenticia"),
+                (2000, "previdencia privada"),
+                (3000, "debitos com saude privada"),
+            ],
+            [
+                ("Rafael Bandeirantes", "29/12/2017"),
+                ("Jonas Lopes Batista", "02/04/2009"),
+            ],
+        ),
+    ],
+)
+def test_imprime_demostrativo_apuracao_impostos(
+    id,
+    pessoa,
+    rendimentos,
+    deducoes,
+    dependentes,
+):
+    [pessoa.cadastrar_rendimentos(valor, descricao) for valor, descricao in rendimentos]
+    [pessoa.insere_deducao(dedu, text) for dedu, text in deducoes]
+    [
+        pessoa.cadastra_dependentes(nome, data_nascimento)
+        for nome, data_nascimento in dependentes
+    ]
+    pessoa.calcula_imposto()
     demostrativo = pessoa.imprime_demostrativo()
-    assert demostrativo == RETORNO_CASOS_DEMOSTRATIVO[0]
+    print(demostrativo)
+    assert demostrativo == RETORNO_CASOS_DEMOSTRATIVO[id]
