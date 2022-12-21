@@ -69,4 +69,4 @@ class PessoaFisicaReceitaFederal:
         return return_ultima_faixas(self.base_de_calculo())
 
     def calcular_aliquota_efetiva(self):
-        return 0
+        return self.imposto / self.base_de_calculo() * 100
