@@ -65,8 +65,5 @@ class PessoaFisicaReceitaFederal:
     def calcula_imposto_efetivo(self):
         return calcula_imposto_efetivo(self.soma_rendimentos_tributaveis, self.imposto)
 
-    def calcula_ultima_faixa(self):
-        return return_ultima_faixas(self.base_de_calculo())
-
     def calcular_aliquota_efetiva(self):
-        return self.imposto / self.base_de_calculo() * 100
+        return round(self.imposto / self.soma_rendimentos_tributaveis * 100, 2)
