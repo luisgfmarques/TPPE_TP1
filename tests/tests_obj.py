@@ -1,6 +1,47 @@
 import pytest
 from ..obj import PessoaFisicaReceitaFederal
 
+RETORNO_CASOS_DEMOSTRATIVO = [
+    [
+        {
+            "faixa": 1,
+            "faixa de base de calculo": 1903.98,
+            "aliquota da faixa": "0%",
+            " imposto pago nesta faixa": 0.0,
+        },
+        {
+            "faixa": 2,
+            "faixa de base de calculo": 922.67,
+            "aliquota da faixa": "7.5%",
+            " imposto pago nesta faixa": 69.2002,
+        },
+        {
+            "faixa": 3,
+            "faixa de base de calculo": 924.4,
+            "aliquota da faixa": "15.0%",
+            " imposto pago nesta faixa": 138.66,
+        },
+        {
+            "faixa": 4,
+            "faixa de base de calculo": 913.63,
+            "aliquota da faixa": "22.5%",
+            " imposto pago nesta faixa": 205.5668,
+        },
+        {
+            "faixa": 5,
+            "faixa de base de calculo": 466.5499999999993,
+            "aliquota da faixa": "27.500000000000004%",
+            " imposto pago nesta faixa": 128.3012,
+        },
+        {
+            "faixa": "Total",
+            "faixa de base de calculo": 5131.23,
+            "aliquota da faixa": "-",
+            " imposto total": 541.7282,
+        },
+    ]
+]
+
 
 @pytest.fixture
 def pessoa():
@@ -309,3 +350,17 @@ def test_calcular_aliquota_efeticva(
     ]
     pessoa.calcula_imposto()
     assert pessoa.calcular_aliquota_efetiva() == float("%0.2f" % aliquota_efetiva)
+
+
+def test_imprime_demostrativo_apuracao_impostos(pessoa):
+    pessoa.cadastrar_rendimentos(3000, "Salario")
+    pessoa.cadastrar_rendimentos(1500, "aluguel")
+    pessoa.cadastrar_rendimentos(1500, "Juros")
+    pessoa.insere_deducao(100, "funpresp")
+    pessoa.insere_deducao(100, "Pensao alimenticia")
+    pessoa.insere_deducao(100, "previdencia privada")
+    pessoa.cadastra_dependentes("Rafael Fernandes", "01/12/2007")
+    pessoa.cadastra_dependentes("Bruno Dias", "01/08/2008")
+    pessoa.cadastra_dependentes("Jonas Alves", "02/04/2009")
+    demostrativo = pessoa.imprime_demostrativo()
+    assert demostrativo == RETORNO_CASOS_DEMOSTRATIVO[0]

@@ -73,6 +73,14 @@ def calcula_valor_importo(base_calculo: float):
             )
             valor_calculo = 0
         faixa += 1
+    valores.append(
+        {
+            "faixa": "Total",
+            "faixa de base de calculo": base_calculo,
+            "aliquota da faixa": "-",
+            " imposto total": round(valor_imposto, 4),
+        }
+    )
     return (round(valor_imposto, 2), valores)
 
 
