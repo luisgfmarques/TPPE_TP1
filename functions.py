@@ -21,6 +21,42 @@ def calcula_imposto_efetivo(valortotal, valorimposto):
     return round(valorimposto / valortotal * 100, 2)
 
 
+def append_value(faixa, valores_limite, valor_calculo):
+    return {
+        "faixa": faixa + 1,
+        "faixa de base de calculo": valores_limite[faixa]["valor"]
+        if valor_calculo > valores_limite[faixa]["valor"]
+        else valor_calculo,
+        "aliquota da faixa": str(valores_limite[faixa]["aliquota"] * 100) + "%",
+        " imposto pago nesta faixa": (
+            (
+                valores_limite[faixa]["valor"]
+                if valor_calculo > valores_limite[faixa]["valor"]
+                else valor_calculo
+            )
+            * valores_limite[faixa]["aliquota"]
+        ),
+    }
+
+
+def calcula_valor_importo(valores_limite: list, faixa: int):
+    return valores_limite[faixa]["valor"] * valores_limite[faixa]["aliquota"]
+
+
+def atualiza_valor_calculo(valor_calculo: float, valores_limite: list, faixa: int):
+    valor_calculo -= valores_limite[faixa]["valor"]
+    return round(valor_calculo, 3)
+
+
+def adiciona_faixa_total(base_calculo: float, valor_imposto: float):
+    return {
+        "faixa": "Total",
+        "faixa de base de calculo": base_calculo,
+        "aliquota da faixa": "-",
+        " imposto total": round(valor_imposto, 4),
+    }
+
+
 def calcula_valor_importo(base_calculo: float):
     valores_limite = [
         {"valor": 1903.98, "aliquota": 0},
@@ -34,42 +70,15 @@ def calcula_valor_importo(base_calculo: float):
     faixa = 0
     valores = []
     while valor_calculo > 0:
-        valores.append(
-            {
-                "faixa": faixa + 1,
-                "faixa de base de calculo": valores_limite[faixa]["valor"]
-                if valor_calculo > valores_limite[faixa]["valor"]
-                else valor_calculo,
-                "aliquota da faixa": str(valores_limite[faixa]["aliquota"] * 100) + "%",
-                " imposto pago nesta faixa": (
-                    (
-                        valores_limite[faixa]["valor"]
-                        if valor_calculo > valores_limite[faixa]["valor"]
-                        else valor_calculo
-                    )
-                    * valores_limite[faixa]["aliquota"]
-                ),
-            }
-        )
+        valores.append(append_value(faixa, valores_limite, valor_calculo))
         if valor_calculo >= valores_limite[faixa]["valor"]:
-            valor_imposto += (
-                valores_limite[faixa]["valor"] * valores_limite[faixa]["aliquota"]
-            )
-            valor_calculo -= valores_limite[faixa]["valor"]
-            valor_calculo = round(valor_calculo, 3)
+            valor_imposto += calcula_valor_importo(valores_limite, faixa)
+            valor_calculo = atualiza_valor_calculo(valor_calculo, valores_limite, faixa)
         else:
-            print("else")
             valor_imposto += valor_calculo * valores_limite[faixa]["aliquota"]
             valor_calculo = 0
         faixa += 1
-    valores.append(
-        {
-            "faixa": "Total",
-            "faixa de base de calculo": base_calculo,
-            "aliquota da faixa": "-",
-            " imposto total": round(valor_imposto, 4),
-        }
-    )
+    valores.append(adiciona_faixa_total(base_calculo, valor_imposto))
     return (round(valor_imposto, 2), valores)
 
 
