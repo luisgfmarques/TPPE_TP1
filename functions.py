@@ -39,7 +39,7 @@ def append_value(faixa, valores_limite, valor_calculo):
     }
 
 
-def calcula_valor_importo(valores_limite: list, faixa: int):
+def calcula_valor_imposto_faixa(valores_limite: list, faixa: int):
     return valores_limite[faixa]["valor"] * valores_limite[faixa]["aliquota"]
 
 
@@ -54,10 +54,9 @@ def adiciona_faixa_total(base_calculo: float, valor_imposto: float):
         "faixa de base de calculo": base_calculo,
         "aliquota da faixa": "-",
         " imposto total": round(valor_imposto, 4),
-    }
+    }   
 
-
-def calcula_valor_importo(base_calculo: float):
+def calcula_valor_imposto(base_calculo: float):
     valores_limite = [
         {"valor": 1903.98, "aliquota": 0},
         {"valor": 922.67, "aliquota": 7.5 / 100},
@@ -72,7 +71,7 @@ def calcula_valor_importo(base_calculo: float):
     while valor_calculo > 0:
         valores.append(append_value(faixa, valores_limite, valor_calculo))
         if valor_calculo >= valores_limite[faixa]["valor"]:
-            valor_imposto += calcula_valor_importo(valores_limite, faixa)
+            valor_imposto += calcula_valor_imposto_faixa(valores_limite, faixa)
             valor_calculo = atualiza_valor_calculo(valor_calculo, valores_limite, faixa)
         else:
             valor_imposto += valor_calculo * valores_limite[faixa]["aliquota"]
@@ -83,4 +82,4 @@ def calcula_valor_importo(base_calculo: float):
 
 
 if __name__ == "__main__":
-    print(calcula_valor_importo(3000))
+    print(calcula_valor_imposto(3000))

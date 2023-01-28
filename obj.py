@@ -2,13 +2,13 @@ try:
     from functions import (
     return_ultima_faixas,
     calcula_imposto_efetivo,
-    calcula_valor_importo,
+    calcula_valor_imposto,
     )
 except ModuleNotFoundError:
     from .functions import (
     return_ultima_faixas,
     calcula_imposto_efetivo,
-    calcula_valor_importo,
+    calcula_valor_imposto,
     )
 
 
@@ -67,7 +67,7 @@ class PessoaFisicaReceitaFederal:
         return base_calculo
 
     def calcula_imposto(self):
-        self.imposto, self.demostrativo = calcula_valor_importo(self.base_de_calculo())
+        self.imposto, self.demostrativo = calcula_valor_imposto(self.base_de_calculo())
         return self.demostrativo
 
     def imprime_demostrativo(self):
