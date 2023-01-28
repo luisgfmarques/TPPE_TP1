@@ -21,7 +21,7 @@ def calcula_imposto_efetivo(valortotal, valorimposto):
     return round(valorimposto / valortotal * 100, 2)
 
 
-def append_value(faixa, valores_limite, valor_calculo):
+def append_value(faixa: int, valores_limite: list, valor_calculo: float):
     return {
         "faixa": faixa + 1,
         "faixa de base de calculo": valores_limite[faixa]["valor"]

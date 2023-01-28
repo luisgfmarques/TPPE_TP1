@@ -4,7 +4,7 @@ from ..functions import (
     calcula_imposto_efetivo,
     calcula_valor_imposto,
 )
-
+from ..obj import CalculaValorImposto
 
 @pytest.mark.parametrize(
     "valor, expected_aliquota,expected_faixa",
@@ -59,3 +59,22 @@ def test_calcula_imposto_efetivo(valortotal, valorimposto, expected_imposto_efet
 )
 def test_calcula_valor_imposto(base_calculo, valor_imposto):
     assert valor_imposto == pytest.approx(calcula_valor_imposto(base_calculo)[0], 0.001)
+
+@pytest.mark.parametrize(
+    "base_calculo, valor_imposto",
+    [
+        (1000, 0),
+        (2000, 7.20),
+        (3000, 95.20),
+        (4000, 263.87),
+        (5000, 505.64),
+        (6000, 780.64),
+        (7000, 1055.64),
+        (8000, 1330.64),
+        (9000, 1605.64),
+        (10000, 1880.64),
+    ],
+)
+def test_calcula_valor_imposto_obj(base_calculo, valor_imposto):
+    calc = CalculaValorImposto(base_calculo)
+    assert valor_imposto == pytest.approx(calc.calcula_valor_imposto()[0], 0.001)
