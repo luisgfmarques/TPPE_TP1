@@ -20,20 +20,13 @@ def return_ultima_faixas(valor):
 def calcula_imposto_efetivo(valortotal, valorimposto):
     return round(valorimposto / valortotal * 100, 2)
 
-
-class CalculaValores:
-    VALORES_LIMITE = [
-        {"valor": 1903.98, "aliquota": 0},
-        {"valor": 922.67, "aliquota": 7.5 / 100},
-        {"valor": 924.40, "aliquota": 15 / 100},
-        {"valor": 913.63, "aliquota": 22.5 / 100},
-        {"valor": inf, "aliquota": 27.5 / 100},
-    ]
+class CalculaFaixas:
     base_de_calculo = 0
-    valor_imposto = 0
+    VALORES_LIMITE = []
 
-    def __init__(self, base_de_calculo: float):
+    def __init__(self, valores_limite: list, base_de_calculo: float):
         self.base_de_calculo = base_de_calculo
+        self.VALORES_LIMITE = valores_limite
 
     def calcula_valor_imposto_faixa(self, faixa: int):
         return (
@@ -64,6 +57,22 @@ class CalculaValores:
             ),
         }
 
+class CalculaValores:
+    VALORES_LIMITE = [
+        {"valor": 1903.98, "aliquota": 0},
+        {"valor": 922.67, "aliquota": 7.5 / 100},
+        {"valor": 924.40, "aliquota": 15 / 100},
+        {"valor": 913.63, "aliquota": 22.5 / 100},
+        {"valor": inf, "aliquota": 27.5 / 100},
+    ]
+    base_de_calculo = 0
+    valor_imposto = 0
+    calcula_faixas = CalculaFaixas([], 0)
+
+    def __init__(self, base_de_calculo: float):
+        self.base_de_calculo = base_de_calculo
+        self.calcula_faixas = CalculaFaixas(self.VALORES_LIMITE, base_de_calculo)
+
     def adiciona_faixa_total(self):
         return {
             "faixa": "Total",
@@ -71,14 +80,14 @@ class CalculaValores:
             "aliquota da faixa": "-",
             " imposto total": round(self.valor_imposto, 2),
         }
-    
+
     def calcula_valor_calculo(self, faixa: int, valor_calculo: float):
         valor_limite_da_faixa = self.VALORES_LIMITE[faixa]["valor"] 
         aliquota_da_faixa = self.VALORES_LIMITE[faixa]["aliquota"]
 
         if valor_calculo >= valor_limite_da_faixa:
-            self.valor_imposto += self.calcula_valor_imposto_faixa(faixa)
-            valor_calculo = self.atualiza_valor_calculo(valor_calculo, faixa)
+            self.valor_imposto += self.calcula_faixas.calcula_valor_imposto_faixa(faixa)
+            valor_calculo = self.calcula_faixas.atualiza_valor_calculo(valor_calculo, faixa)
         else:
             self.valor_imposto += valor_calculo * aliquota_da_faixa
             valor_calculo = 0
@@ -90,11 +99,10 @@ class CalculaValores:
         faixa = 0
         valores = []
         while valor_calculo > 0:
-            valores.append(self.append_value(faixa, valor_calculo))
+            valores.append(self.calcula_faixas.append_value(faixa, valor_calculo))
             valor_calculo = self.calcula_valor_calculo(faixa, valor_calculo)
             faixa += 1
         valores.append(self.adiciona_faixa_total())
         return (round(self.valor_imposto, 2), valores)
-
 if __name__ == "__main__":
     pass
