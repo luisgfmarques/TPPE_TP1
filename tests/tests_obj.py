@@ -13,7 +13,7 @@ RETORNO_CASOS_DEMOSTRATIVO = [
             "faixa": 2,
             "faixa de base de calculo": 922.67,
             "aliquota da faixa": "7.5%",
-            " imposto pago nesta faixa": 69.20025,
+            " imposto pago nesta faixa": 69.2,
         },
         {
             "faixa": 3,
@@ -25,19 +25,19 @@ RETORNO_CASOS_DEMOSTRATIVO = [
             "faixa": 4,
             "faixa de base de calculo": 913.63,
             "aliquota da faixa": "22.5%",
-            " imposto pago nesta faixa": 205.56675,
+            " imposto pago nesta faixa": 205.57,
         },
         {
             "faixa": 5,
-            "faixa de base de calculo": 466.5499999999993,
-            "aliquota da faixa": "27.500000000000004%",
-            " imposto pago nesta faixa": 128.3012499999998,
+            "faixa de base de calculo": 466.55,
+            "aliquota da faixa": "27.5%",
+            " imposto pago nesta faixa": 128.3,
         },
         {
             "faixa": "Total",
             "faixa de base de calculo": 5131.23,
             "aliquota da faixa": "-",
-            " imposto total": 541.7282,
+            " imposto total": 541.73,
         },
     ],
     [
@@ -59,7 +59,7 @@ RETORNO_CASOS_DEMOSTRATIVO = [
             "faixa": 2,
             "faixa de base de calculo": 922.67,
             "aliquota da faixa": "7.5%",
-            " imposto pago nesta faixa": 69.20025,
+            " imposto pago nesta faixa": 69.2,
         },
         {
             "faixa": 3,
@@ -71,21 +71,21 @@ RETORNO_CASOS_DEMOSTRATIVO = [
             "faixa": 4,
             "faixa de base de calculo": 913.63,
             "aliquota da faixa": "22.5%",
-            " imposto pago nesta faixa": 205.56675,
+            " imposto pago nesta faixa": 205.57,
         },
         {
             "faixa": 5,
             "faixa de base de calculo": 25956.14,
-            "aliquota da faixa": "27.500000000000004%",
-            " imposto pago nesta faixa": 7137.9385,
+            "aliquota da faixa": "27.5%",
+            " imposto pago nesta faixa": 7137.94,
         },
         {
             "faixa": "Total",
             "faixa de base de calculo": 30620.82,
             "aliquota da faixa": "-",
-            " imposto total": 7551.3655,
+            " imposto total": 7551.37,
         },
-    ]
+    ],
 ]
 
 

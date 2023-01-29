@@ -1,14 +1,14 @@
 try:
-    from functions import (
-    return_ultima_faixas,
-    calcula_imposto_efetivo,
-    calcula_valor_imposto,
+    from .functions import (
+        return_ultima_faixas,
+        calcula_imposto_efetivo,
+        calcula_valor_imposto,
     )
 except ModuleNotFoundError:
-    from .functions import (
-    return_ultima_faixas,
-    calcula_imposto_efetivo,
-    calcula_valor_imposto,
+    from functions import (
+        return_ultima_faixas,
+        calcula_imposto_efetivo,
+        calcula_valor_imposto,
     )
 
 
@@ -79,15 +79,16 @@ class PessoaFisicaReceitaFederal:
     def calcular_aliquota_efetiva(self):
         return round(self.imposto / self.soma_rendimentos_tributaveis * 100, 2)
 
+
 class CalculaValorImposto:
     base_calculo = 0
     valores_limite = [
-            {"valor": 1903.98, "aliquota": 0},
-            {"valor": 922.67, "aliquota": 7.5 / 100},
-            {"valor": 924.40, "aliquota": 15 / 100},
-            {"valor": 913.63, "aliquota": 22.5 / 100},
-            {"valor": base_calculo - 4664.68, "aliquota": 27.5 / 100},
-        ]
+        {"valor": 1903.98, "aliquota": 0},
+        {"valor": 922.67, "aliquota": 7.5 / 100},
+        {"valor": 924.40, "aliquota": 15 / 100},
+        {"valor": 913.63, "aliquota": 22.5 / 100},
+        {"valor": base_calculo - 4664.68, "aliquota": 27.5 / 100},
+    ]
     valores = []
     valor_imposto = 0
 
@@ -102,7 +103,6 @@ class CalculaValorImposto:
         ]
         self.valores = []
         self.valor_imposto = 0
-        
 
     def append_value(self, faixa: int, valor_calculo: float):
         return {
@@ -110,7 +110,8 @@ class CalculaValorImposto:
             "faixa de base de calculo": self.valores_limite[faixa]["valor"]
             if valor_calculo > self.valores_limite[faixa]["valor"]
             else valor_calculo,
-            "aliquota da faixa": str(self.valores_limite[faixa]["aliquota"] * 100) + "%",
+            "aliquota da faixa": str(self.valores_limite[faixa]["aliquota"] * 100)
+            + "%",
             " imposto pago nesta faixa": (
                 (
                     self.valores_limite[faixa]["valor"]
@@ -121,15 +122,14 @@ class CalculaValorImposto:
             ),
         }
 
-
     def calcula_valor_imposto_faixa(self, faixa: int):
-        return self.valores_limite[faixa]["valor"] * self.valores_limite[faixa]["aliquota"]
-
+        return (
+            self.valores_limite[faixa]["valor"] * self.valores_limite[faixa]["aliquota"]
+        )
 
     def atualiza_valor_calculo(self, valor_calculo: float, faixa: int):
         valor_calculo -= self.valores_limite[faixa]["valor"]
         return round(valor_calculo, 3)
-
 
     def adiciona_faixa_total(self):
         return {
@@ -137,19 +137,21 @@ class CalculaValorImposto:
             "faixa de base de calculo": self.base_calculo,
             "aliquota da faixa": "-",
             " imposto total": round(self.valor_imposto, 4),
-        }   
+        }
 
     def calcula_valor_imposto(self):
         valor_calculo = self.base_calculo
         faixa = 0
-        
+
         while valor_calculo > 0:
             self.valores.append(self.append_value(faixa, valor_calculo))
             if valor_calculo >= self.valores_limite[faixa]["valor"]:
                 self.valor_imposto += self.calcula_valor_imposto_faixa(faixa)
                 valor_calculo = self.atualiza_valor_calculo(valor_calculo, faixa)
             else:
-                self.valor_imposto += valor_calculo * self.valores_limite[faixa]["aliquota"]
+                self.valor_imposto += (
+                    valor_calculo * self.valores_limite[faixa]["aliquota"]
+                )
                 valor_calculo = 0
             faixa += 1
         self.valores.append(self.adiciona_faixa_total())
