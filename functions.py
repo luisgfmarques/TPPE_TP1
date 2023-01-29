@@ -73,11 +73,14 @@ class CalculaValores:
         }
     
     def calcula_valor_calculo(self, faixa: int, valor_calculo: float):
-        if valor_calculo >= self.VALORES_LIMITE[faixa]["valor"]:
+        valor_limite_da_faixa = self.VALORES_LIMITE[faixa]["valor"] 
+        aliquota_da_faixa = self.VALORES_LIMITE[faixa]["aliquota"]
+
+        if valor_calculo >= valor_limite_da_faixa:
             self.valor_imposto += self.calcula_valor_imposto_faixa(faixa)
             valor_calculo = self.atualiza_valor_calculo(valor_calculo, faixa)
         else:
-            self.valor_imposto += valor_calculo * self.VALORES_LIMITE[faixa]["aliquota"]
+            self.valor_imposto += valor_calculo * aliquota_da_faixa
             valor_calculo = 0
         
         return valor_calculo
