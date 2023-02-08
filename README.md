@@ -31,6 +31,7 @@ pip install -r requirements.txt
 ```
 ![Screenshot from 2022-12-21 17-59-19](https://user-images.githubusercontent.com/42779015/209001925-5b91c67c-5fa1-4f52-8a0b-44b345ec6762.png)
 
-
+## ## TP3 
+O TP3 esta disponivel aqui ![TP3](https://github.com/luisgfmarques/TPPE_TP1/blob/main/TPPE%20T3.pdf).
 ## Marcos Gabriel Tavares - 170041042
 ## Luis Marques - 180105604
